@@ -70,7 +70,7 @@ public class AddMemberController extends HttpServlet {
 			return;
 		}
 		
-		response.sendRedirect(request.getContextPath()+"/home");
+		response.sendRedirect(request.getContextPath()+"/member/login");
 	}
 
 }
