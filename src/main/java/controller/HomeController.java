@@ -1,31 +1,53 @@
 package controller;
 
 import java.io.IOException;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
-@SuppressWarnings("serial")
+import vo.Member;
+
 @WebServlet("/home")
 public class HomeController extends HttpServlet {
 
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	private static final long serialVersionUID = 1L;
+    
+    /**
+     * @see HttpServlet#HttpServlet()
+     */
+    public HomeController() {
+        super();
+        // TODO Auto-generated constructor stub
+    }
 
+	/**
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		/*
-		 * VIEW -> /WEB-INF/view/home.jsp
-		 * 메뉴구성(로그인 전/후 따라 분기)
-		 * 
-		 * 로그인 전
-		 * 1) 회원가입
-		 * 2) 로그인
-		 * 
-		 * 로그인 후
-		 * 1) 로그아웃
-		 * 2) 회원정보
-		 * 3) 게시판리스트
+		 *  VIEW -> forward -> /WEB-INF/view/home.jsp
+		 *  메뉴 구성(로그인 전 후 분기)
+		 *  로그인 전
+		 *  1) 로그인 / 끝
+		 *  2) 회원가입 / 끝
+		 *  
+		 *  로그인 후
+		 *  1) 로그아웃 / 끝
+		 *  2) 회원 정보 / 끝
+		 *  3) 게시판 리스트 / 끝
 		 */
+		request.setCharacterEncoding("UTF-8");
+		
+		HttpSession session = request.getSession();
+		@SuppressWarnings("unused")
+		Member loginMember = (Member)session.getAttribute("loginMember");
+		
+		request.getRequestDispatcher("/WEB-INF/view/home.jsp").forward(request, response);
+		
 	}
 
 }

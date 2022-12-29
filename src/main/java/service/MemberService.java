@@ -1,7 +1,6 @@
 package service;
 
 import java.sql.*;
-
 import dao.MemberDao;
 import util.DBUtil;
 import vo.Member;
@@ -9,120 +8,108 @@ import vo.Member;
 public class MemberService {
 	private MemberDao memberDao;
 	
-	// 1) 로그인 service
-	public Member loginService(Member member) {
-		Member resultMember = null;
+	public Member getLogIn(Member member) {
+		Member returnMember = null;
 		Connection conn = null;
-		
 		try {
 			conn = DBUtil.getConnection();
-			resultMember = memberDao.loginDao(conn, member);
+			memberDao = new MemberDao();
+			returnMember = memberDao.logIn(conn, member);
 			conn.commit();
 		} catch (Exception e) {
 			try {
 				conn.rollback();
-			} catch (SQLException e1) {
+			} catch(Exception e1) {
 				e1.printStackTrace();
 			}
 			e.printStackTrace();
 		} finally {
-			if(conn != null) {
-				try {
-					conn.close();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
+			try {
+				conn.close();
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
 		}
-		
-		return resultMember;
+		return returnMember;
 	}
 	
-	// 2) 회원가입 service
-	public int insertMemberService(Member member) {
-		int resultRow = 0;
+	public int getInsertMember(Member member) {
+		int result = 0;
 		Connection conn = null;
-		
 		try {
-			this.memberDao = new MemberDao();
 			conn = DBUtil.getConnection();
-			resultRow = memberDao.insertMemberDao(conn, member);
+			memberDao = new MemberDao();
+			boolean duplicate = memberDao.duplicateMemberId(conn, member);
+			System.out.println("중복검사 확인");
+			if(!duplicate) {
+				result = memberDao.insertMember(conn, member);
+				System.out.println("인설트 확인");
+			}
 			conn.commit();
-		} catch (Exception e) {
-			try {
-				conn.rollback();
-			} catch (SQLException e1) {
-				e1.printStackTrace();
-			}
-			e.printStackTrace();
-		} finally {
-			if(conn != null) {
-				try {
-					conn.close();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
-			}
-		}
-		
-		return resultRow;
-	}
-	
-	// 3) 회원수정 service
-	public int updateMemberService(Member member) {
-		int resultRow = 0;		
-		Connection conn = null;
-		
-		try {
-			this.memberDao = new MemberDao();
-			conn = DBUtil.getConnection();
-			resultRow = memberDao.updateMemberDao(conn, member);
-			conn.commit();
-		} catch (Exception e) {
-			try {
-				conn.rollback();
-			} catch (SQLException e1) {
-				e1.printStackTrace();
-			}
-			e.printStackTrace();
-		} finally {
-			if(conn != null) {
-				try {
-					conn.close();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
-			}
-		}
-		
-		return resultRow;
-	}
-	// 4) 회원삭제 service
-	public int deleteMemberService(Member member) {
-		int resultRow = 0;		
-		Connection conn = null;
-		
-		try {
-			this.memberDao = new MemberDao();
-			conn = DBUtil.getConnection();
-			resultRow = memberDao.deleteMemberDao(conn, member);
 		} catch(Exception e) {
 			try {
 				conn.rollback();
-			} catch (SQLException e1) {
+			} catch(Exception e1) {
 				e1.printStackTrace();
 			}
 			e.printStackTrace();
 		} finally {
-			if(conn != null) {
-				try {
-					conn.close();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
+			try {
+				conn.close();
+			} catch(Exception e) {
+				e.printStackTrace();
 			}
 		}
-		
-		return resultRow;
+		return result;
+	}
+	
+	public int getModifyMember(Member member) {
+		int result = 0;
+		Connection conn = null;
+		try {
+			conn = DBUtil.getConnection();
+			memberDao = new MemberDao();
+			result = memberDao.modifyMember(conn, member);
+			conn.commit();
+		} catch(Exception e) {
+			try {
+				conn.commit();
+			} catch(Exception e1) {
+				e1.printStackTrace();
+			}
+			e.printStackTrace();
+		} finally {
+			try {
+				conn.close();
+			} catch(Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return result;
+	}
+	
+	public int getRemoveMember(Member member) {
+		int result = 0;
+		Connection conn = null;
+		try {
+			conn = DBUtil.getConnection();
+			memberDao = new MemberDao();
+			result = memberDao.removeMember(conn, member);
+			conn.commit();
+		} catch(Exception e) {
+			try {
+				conn.commit();
+			} catch(Exception e1) {
+				e1.printStackTrace();
+			}
+			e.printStackTrace();
+		} finally {
+			try {
+				conn.close();
+			} catch(Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return result;
 	}
 }

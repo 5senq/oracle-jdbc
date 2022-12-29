@@ -7,16 +7,24 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@SuppressWarnings("serial")
 @WebServlet("/member/logout")
 public class LogoutController extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+    
+    /**
+     * @see HttpServlet#HttpServlet()
+     */
+    public LogoutController() {
+        super();
+        // TODO Auto-generated constructor stub
+    }
 
+	/**
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		/*
-		 * 로그인 세션 정보 삭제 : ex) session.invalidate();
-		 * redirect -> get방식 home <- 컨트롤러 요청
-		 * 
-		 */
+		request.getSession().invalidate();
+		response.sendRedirect(request.getContextPath()+"/home");
 	}
 
 }
